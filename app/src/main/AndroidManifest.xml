@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="sk.scolopax.reservrant">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.TablesActivity"
+            android:parentActivityName=".ui.HomeActivity"/>
+
+        <provider
+            android:name=".data.CustomersProvider"
+            android:authorities="sk.scolopax.reservrant"
+            android:exported="true" />
+
+        <provider
+            android:name=".data.TablesProvider"
+            android:authorities="sk.scolopax.reservrant"
+            android:exported="true" />
+
+    </application>
+
+</manifest>
