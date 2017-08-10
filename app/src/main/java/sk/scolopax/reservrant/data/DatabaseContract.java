@@ -13,7 +13,8 @@ public class DatabaseContract {
     // Database schema information
     public static final String TABLE_CUSTOMERS = "customers";
     public static final String TABLE_TABLES = "tables";
-    public static final String CONTENT_AUTHORITY = "sk.scolopax.reservrant";
+    public static final String CONTENT_AUTHORITY_CUSTOMER = "sk.scolopax.reservrant.customer";
+    public static final String CONTENT_AUTHORITY_TABLE = "sk.scolopax.reservrant.table";
 
 
     /*  Customers  */
@@ -28,7 +29,7 @@ public class DatabaseContract {
         static final int COL_IDX_NAME_LAST = 2;
 
         public static final Uri CONTENT_URI = new Uri.Builder().scheme("content")
-                .authority(CONTENT_AUTHORITY)
+                .authority(CONTENT_AUTHORITY_CUSTOMER)
                 .appendPath(TABLE_CUSTOMERS)
                 .build();
 
@@ -54,10 +55,20 @@ public class DatabaseContract {
         public static final String COL_AVAILABLE = "available";
         public static final String COL_RESERVATION_TIME = "reservationtime";
 
+        static final int COL_IDX_ID = 0;
+        static final int COL_IDX_ID_CUSTOMER = 1;
+        static final int COL_IDX_RESERVATION_TIME = 2;
+        static final int COL_IDX_AVAILABLE = 3;
+
         public static final Uri CONTENT_URI = new Uri.Builder().scheme("content")
-                .authority(CONTENT_AUTHORITY)
+                .authority(CONTENT_AUTHORITY_TABLE)
                 .appendPath(TABLE_TABLES)
                 .build();
+
+        public static String[] getProjection()
+        {
+            return new String[] { TableTables.COL_ID,TableTables.COL_ID_CUSTOMER, TableTables.COL_RESERVATION_TIME,TableTables.COL_AVAILABLE };
+        }
 
         public static Uri buildTablesUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

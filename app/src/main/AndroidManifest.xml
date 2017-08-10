@@ -22,12 +22,12 @@
 
         <provider
             android:name=".data.CustomersProvider"
-            android:authorities="sk.scolopax.reservrant"
+            android:authorities="sk.scolopax.reservrant.customer"
             android:exported="true" />
 
         <provider
             android:name=".data.TablesProvider"
-            android:authorities="sk.scolopax.reservrant"
+            android:authorities="sk.scolopax.reservrant.table"
             android:exported="true" />
 
     </application>

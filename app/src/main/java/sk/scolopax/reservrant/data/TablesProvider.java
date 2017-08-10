@@ -26,9 +26,9 @@ public class TablesProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static
     {
-        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY, DatabaseContract.TABLE_TABLES, TABLES);
+        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_TABLE, DatabaseContract.TABLE_TABLES, TABLES);
 
-        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY, DatabaseContract.TABLE_TABLES + "/#", TABLES_WITH_ID);
+        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_TABLE, DatabaseContract.TABLE_TABLES + "/#", TABLES_WITH_ID);
     }
 
     private ReservrantDBHelper mReservrantDBHelper;
@@ -81,7 +81,7 @@ public class TablesProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case TABLES:
             {
-                long id = db.insert(DatabaseContract.TABLE_CUSTOMERS, null, contentValues);
+                long id = db.insert(DatabaseContract.TABLE_TABLES, null, contentValues);
                 if ( id > 0 )
                     returnUri = DatabaseContract.TableTables.buildTablesUri(id);
                 else

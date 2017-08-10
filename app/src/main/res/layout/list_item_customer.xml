@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:background="@drawable/rounded_corners"
+android:foreground="?android:attr/selectableItemBackground"
+android:layout_marginLeft="4dp"
+android:layout_marginTop="6dp"
+android:layout_marginBottom="4dp"
+android:layout_marginRight="4dp"
+android:clickable="true">
 
-    <TextView
-        android:id="@+id/txt_idcustomer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="id"/>
-
-    <TextView
-        android:id="@+id/txt_firstname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="aaa"/>
-
-    <TextView
-        android:id="@+id/txt_lastname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="lastname"/>
-
-</LinearLayout>
+<TextView
+    android:layout_marginTop="32dp"
+    android:layout_marginBottom="32dp"
+    android:id="@+id/txt_firstname"
+    style="@style/CardFont"/>
+</FrameLayout>

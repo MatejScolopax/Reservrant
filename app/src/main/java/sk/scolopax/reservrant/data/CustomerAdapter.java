@@ -36,11 +36,9 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         return new Customer(mCursor);
     }
 
-
     public interface CustomerAdapterOnClickHandler {
         void onClick(Long id, Customer customer);
     }
-
 
     @Override
     public CustomerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -68,9 +66,9 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         String firstName = mCursor.getString(DatabaseContract.TableCustomers.COL_IDX_NAME_FIRST);
         String lastName = mCursor.getString(DatabaseContract.TableCustomers.COL_IDX_NAME_LAST);
 
-        holder.txtIdCustomer.setText(idCustomer);
-        holder.txtNameFirst.setText(firstName);
-        holder.txtNameLast.setText(lastName);
+      //  holder.txtIdCustomer.setText(idCustomer);
+        holder.txtNameFirst.setText(firstName + " " + lastName);
+       // holder.txtNameLast.setText(lastName);
     }
 
     @Override
@@ -79,17 +77,15 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         return mCursor.getCount();
     }
 
-
-
     public class CustomerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public final TextView txtIdCustomer, txtNameFirst,txtNameLast;
+        public final TextView txtNameFirst; //txtIdCustomer,,txtNameLast;
 
         public CustomerViewHolder(View view) {
             super(view);
-            txtIdCustomer = (TextView) view.findViewById(R.id.txt_idcustomer);
+           // txtIdCustomer = (TextView) view.findViewById(R.id.txt_idcustomer);
             txtNameFirst = (TextView) view.findViewById(R.id.txt_firstname);
-            txtNameLast = (TextView) view.findViewById(R.id.txt_lastname);
+           // txtNameLast = (TextView) view.findViewById(R.id.txt_lastname);
             view.setOnClickListener(this);
         }
 
@@ -106,6 +102,4 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         mCursor = newCursor;
         notifyDataSetChanged();
     }
-
-
 }

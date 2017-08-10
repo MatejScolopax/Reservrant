@@ -1,8 +1,5 @@
 Android Development | Candidate Task
 
-Thank you for applying for the Android Developer vacancy at Q. In efforts to have a general understanding of your level of expertise,
-we would like to proceed with an assessment that will give you the chance to show Q that you are a battle proven Engineer!
-
 The task :
 We need an application to make reservations in a restaurant.
 
@@ -30,7 +27,3 @@ What we will review:
 4. Code extensibility
 5. Performance
 
-Good luck!
-ONCE YOU ARE DONE, PLEASE SEND US A LINK TO A GITHUB REPO WITH YOUR WORK TO: assessment.submittal@q.com
-Sincerely,
-Your Q Team

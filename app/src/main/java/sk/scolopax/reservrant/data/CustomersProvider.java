@@ -24,9 +24,9 @@ public class CustomersProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static
     {
-        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY, DatabaseContract.TABLE_CUSTOMERS, CUSTOMERS);
+        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_CUSTOMER, DatabaseContract.TABLE_CUSTOMERS, CUSTOMERS);
 
-        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY, DatabaseContract.TABLE_CUSTOMERS + "/#", CUSTOMERS_WITH_ID);
+        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_CUSTOMER, DatabaseContract.TABLE_CUSTOMERS + "/#", CUSTOMERS_WITH_ID);
     }
 
     private ReservrantDBHelper mReservrantDBHelper;

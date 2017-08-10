@@ -3,6 +3,8 @@
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
+android:focusable="true"
+android:focusableInTouchMode="true"
 android:paddingBottom="5dp"
 android:paddingLeft="5dp"
 android:paddingRight="5dp"
@@ -23,9 +25,7 @@ tools:context="sk.scolopax.reservrant.ui.HomeActivity">
 <android.support.v7.widget.RecyclerView
     android:id="@+id/recycler_view_customers"
     android:scrollbars="vertical"
-    android:layout_marginTop="45dp"
+    android:layout_marginTop="60dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
-
-
 </RelativeLayout>

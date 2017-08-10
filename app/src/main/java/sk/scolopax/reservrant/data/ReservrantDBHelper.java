@@ -120,11 +120,11 @@ public class ReservrantDBHelper extends SQLiteOpenHelper {
 
         for (int i = 0; i < tables_array.length(); i++) {
 
-            boolean isReserved =  tables_array.getBoolean(i);
+            boolean isAvailable =  tables_array.getBoolean(i);
 
             ContentValues values = new ContentValues(1);
 
-            values.put(DatabaseContract.TableTables.COL_AVAILABLE, isReserved ? 0 : 1);
+            values.put(DatabaseContract.TableTables.COL_AVAILABLE, isAvailable ? 1 : 0);
 
             db.insert(DatabaseContract.TABLE_TABLES, null, values);
         }
