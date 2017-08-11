@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Reservrant</string>
+    <string name="noti_name">All reservations were removed.</string>
 </resources>

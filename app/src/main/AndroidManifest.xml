@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sk.scolopax.reservrant">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,6 +21,16 @@
         <activity
             android:name=".ui.TablesActivity"
             android:parentActivityName=".ui.HomeActivity"/>
+
+        <service
+            android:name=".jobs.ClearTablesService"
+            android:exported="false" />
+
+        <service
+            android:name=".jobs.JobSchedulerService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
 
         <provider
             android:name=".data.CustomersProvider"

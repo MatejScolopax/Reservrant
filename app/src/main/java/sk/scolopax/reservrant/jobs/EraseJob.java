@@ -1,10 +1,12 @@
 package sk.scolopax.reservrant.jobs;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 
@@ -16,22 +18,26 @@ import android.util.Log;
 public class EraseJob {
 
     private static final String TAG = EraseJob.class.getSimpleName();
+    private static final String SHARED_T = EraseJob.class.getSimpleName();
     private static final int JOB_ID = 123;
 
-    public static void startStopEraser(Context ctx, boolean start)
+    public static void startStopEraser(Activity activity)
     {
-        JobScheduler jobScheduler = (JobScheduler) ctx.getSystemService(Context.JOB_SCHEDULER_SERVICE);
 
-        if (!start)
+        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        boolean start = sharedPref.getBoolean(SHARED_T, true);
+
+        JobScheduler jobScheduler = (JobScheduler) activity.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+
+        if (start)
         {
-            jobScheduler.cancel(JOB_ID);
-            Log.d(TAG, "cancelling scheduled job");
-        }
-        else
-        {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SHARED_T, false);
+            editor.commit();
+
             long interval = 600000; //TEN_MINUTES
 
-            JobInfo job = new JobInfo.Builder(JOB_ID, new ComponentName(ctx.getPackageName(), JobSchedulerService.class.getName()))
+            JobInfo job = new JobInfo.Builder(JOB_ID, new ComponentName(activity.getPackageName(), JobSchedulerService.class.getName()))
                     .setPersisted(true)
                     .setPeriodic(interval)
                     .build();

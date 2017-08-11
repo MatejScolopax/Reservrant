@@ -13,12 +13,12 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import sk.scolopax.reservrant.R;
 import sk.scolopax.reservrant.data.Customer;
 import sk.scolopax.reservrant.data.CustomerAdapter;
 import sk.scolopax.reservrant.data.DatabaseContract;
+import sk.scolopax.reservrant.jobs.EraseJob;
 
 public class HomeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -66,7 +66,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                onQueryTextChange(s.toString());
+                //onQueryTextChange(s.toString());
             }
 
             @Override
@@ -75,6 +75,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
+        EraseJob.startStopEraser(this);
         getSupportLoaderManager().initLoader(CUSTOMERS_LOADER_ID, null, this );
     }
 

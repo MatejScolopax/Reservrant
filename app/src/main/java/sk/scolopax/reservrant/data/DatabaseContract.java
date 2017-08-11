@@ -74,14 +74,4 @@ public class DatabaseContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
-
-
-
-
-
-
-
-
-
-
 }

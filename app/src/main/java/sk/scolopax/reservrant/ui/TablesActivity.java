@@ -62,7 +62,7 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
                 Uri uri = ContentUris.withAppendedId(DatabaseContract.TableTables.CONTENT_URI, id);
                 ContentResolver resolver = getContentResolver();
                 long noUpdated = resolver.update(uri, values, null, null);
-                Toast.makeText(TablesActivity.this,"updated:" + noUpdated,Toast.LENGTH_SHORT ).show();
+                //Toast.makeText(TablesActivity.this,"updated:" + noUpdated,Toast.LENGTH_SHORT ).show();
             }
         });
         getSupportLoaderManager().initLoader(TABLES_LOADER_ID, null, this );

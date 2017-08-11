@@ -14,7 +14,7 @@ import android.os.Build;
 public class JobSchedulerService extends JobService {
     @Override
     public boolean onStartJob(JobParameters params) {
-        // erase DB
+        startService(new Intent(this, ClearTablesService.class));
         return false;
     }
 
