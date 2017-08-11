@@ -43,7 +43,6 @@ public class ClearTablesService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         Log.v(TAG, "Executing jobs");
-        clearTables();
         createNotification();
     }
 
@@ -58,25 +57,32 @@ public class ClearTablesService extends IntentService {
         return resolver.update(uri, values, null, null);
     }
 
-
     private void createNotification()
     {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(android.R.drawable.sym_action_email)
-                .setContentTitle(getResources().getString(R.string.app_name))
-                .setContentText(getResources().getString(R.string.noti_name));
 
-        Intent resultIntent = new Intent(this, HomeActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(HomeActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT ) ;
-        mBuilder.setContentIntent(resultPendingIntent);
+        long cleared =  clearTables();
 
-        Notification notification = mBuilder.build();
-        notification.flags = Notification.FLAG_AUTO_CANCEL;
 
-        mNotificationManager.notify(NOTIFICATION_ID, notification);
+        // if no resrvation was removed, do not notify
+        if (cleared> 0) {
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(android.R.drawable.sym_action_email)
+                    .setContentTitle(getResources().getString(R.string.app_name))
+                    .setContentText(getResources().getString(R.string.noti_name));
+
+            Intent resultIntent = new Intent(this, HomeActivity.class);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(HomeActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            Notification notification = mBuilder.build();
+            notification.flags = Notification.FLAG_AUTO_CANCEL;
+
+            mNotificationManager.notify(NOTIFICATION_ID, notification);
+        }
     }
 
 }

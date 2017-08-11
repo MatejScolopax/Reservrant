@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
@@ -47,9 +46,6 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         mCustomerAdapter = new CustomerAdapter(this, new CustomerAdapter.CustomerAdapterOnClickHandler() {
             @Override
             public void onClick(Long id, Customer customer) {
-
-                //Toast.makeText(HomeActivity.this, customer.toString() ,Toast.LENGTH_LONG).show();
-
                 Intent answerIntent = new Intent(HomeActivity.this, TablesActivity.class);
                 answerIntent.putExtra(PARCELABLE_EXTRA,customer);
                 HomeActivity.this.startActivity(answerIntent);
@@ -66,7 +62,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //onQueryTextChange(s.toString());
+                getSupportLoaderManager().restartLoader(CUSTOMERS_LOADER_ID, null, HomeActivity.this );
             }
 
             @Override
@@ -79,48 +75,32 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         getSupportLoaderManager().initLoader(CUSTOMERS_LOADER_ID, null, this );
     }
 
-    public void onQueryTextChange(String newText) {
-        mCurFilter = !TextUtils.isEmpty(newText) ? newText : null;
-        getSupportLoaderManager().restartLoader(CUSTOMERS_LOADER_ID, null, this);
-    }
-
-
     /* LoaderManager.LoaderCallbacks<Cursor> */
 
+    private Loader<Cursor> getAllCustmoers()
+    {
+        String[] projection = DatabaseContract.TableCustomers.getProjection();
+        return new CursorLoader(HomeActivity.this, DatabaseContract.TableCustomers.CONTENT_URI, projection, null, null, null);
+    }
 
-//    @NonNull
-//    public static android.content.Loader<Cursor> createSearchStationsLoader(@NonNull Context context, @NonNull String nameLike) {
-//        return new CursorLoaderBuilder(StationsEntity.class)
-//                .selection(new Selection(StationsEntity.Columns.NAME_FULL_NORMALIZED + " LIKE ?")
-//                        .groupAnd( 	StationsEntity.Columns.TYPE + "=? OR " + StationsEntity.Columns.TICKETS_SELLING + "=1")
-//                )
-//                .selectionArgs(new String[]{ "%" + TextUtils.normalizeText(nameLike) + "%", Integer.toString(Station.TYPE_HIGH_TATRAS)
-//                })
-//                .sortOrder("(CASE WHEN name_full_normalized = '"+TextUtils.normalizeText(nameLike)+"' THEN 1 WHEN name_full_normalized LIKE '"+TextUtils.normalizeText(nameLike)+"%' THEN 2 ELSE 3 END)")
-//                .build(context); //DONE by Matej - doplneny SORT - aby ked sa hlada "tur" boli "Turany" pred "Stara Tura"
-//    }
-
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//
-//        Uri baseUri;
-//        if (mCurFilter != null)
-//            baseUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI, Uri.encode(mCurFilter));
-//        else
-//            baseUri = DatabaseContract.CONTENT_URI;
-//
-//
-//        String select = "((" + ContactsContract.Contacts.DISPLAY_NAME     + " NOTNULL) AND ("
-//                + ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1) AND ("
-//                + ContactsContract.Contacts.DISPLAY_NAME     + " != '' ))";
-//
-//        return new android.content.CursorLoader(this, baseUri, CONTACTS_SUMMARY_PROJECTION, select, null, ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC");
-//    }
+    private Loader<Cursor> getLikeCustmoers(String like)
+    {
+        String[] projection = DatabaseContract.TableCustomers.getProjection();
+        String selection = DatabaseContract.TableCustomers.COL_NAME_FIRST + " LIKE ? OR " + DatabaseContract.TableCustomers.COL_NAME_LAST + " LIKE ? ";
+        String[] selectionArgs = {"%" + like + "%","%" + like + "%"};
+        return new CursorLoader(HomeActivity.this, DatabaseContract.TableCustomers.CONTENT_URI, projection, selection, selectionArgs, null);
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection = DatabaseContract.TableCustomers.getProjection();
-        return new CursorLoader(HomeActivity.this, DatabaseContract.TableCustomers.CONTENT_URI, projection, null, null, null);
+
+        if (edtSearch.getText().toString().length()==0){
+            return getAllCustmoers();
+        }
+        else {
+            return getLikeCustmoers(edtSearch.getText().toString());
+        }
+
     }
 
     @Override

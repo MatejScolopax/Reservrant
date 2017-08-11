@@ -1,24 +1,26 @@
 package sk.scolopax.reservrant.ui;
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+
 
 import sk.scolopax.reservrant.R;
 import sk.scolopax.reservrant.data.Customer;
 import sk.scolopax.reservrant.data.DatabaseContract;
+import sk.scolopax.reservrant.data.ReserveTableTask;
 import sk.scolopax.reservrant.data.TablesAdapter;
+
+
 
 
 /**
@@ -30,12 +32,13 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
     private Customer selectedCustomer;
     private TablesAdapter mTableAdapter;
     private static final int TABLES_LOADER_ID = 10;
+    private static final String TAG = TablesActivity.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tables);
-
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null)
@@ -54,15 +57,13 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                ContentValues values = new ContentValues();
-                values.clear();
-                values.put(DatabaseContract.TableTables.COL_AVAILABLE, 0);
-                values.put(DatabaseContract.TableTables.COL_ID_CUSTOMER,selectedCustomer.idCustomer);
-                Uri uri = ContentUris.withAppendedId(DatabaseContract.TableTables.CONTENT_URI, id);
-                ContentResolver resolver = getContentResolver();
-                long noUpdated = resolver.update(uri, values, null, null);
-                //Toast.makeText(TablesActivity.this,"updated:" + noUpdated,Toast.LENGTH_SHORT ).show();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long idTable) {
+
+                LinearLayout ll = (LinearLayout) view.findViewById(R.id.fl_table);
+                ll.setBackground(TablesActivity.this.getDrawable(R.drawable.table_unavailable));
+
+                Long params[] = {idTable, selectedCustomer.idCustomer };
+                new MakeReservation(TablesActivity.this).execute(params);
             }
         });
         getSupportLoaderManager().initLoader(TABLES_LOADER_ID, null, this );
@@ -83,4 +84,19 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
     public void onLoaderReset(Loader<Cursor> loader) {
         mTableAdapter.refreshCursor(null);
     }
+
+    /* Reservation task on worker thread */
+    private class MakeReservation extends ReserveTableTask
+    {
+
+        public MakeReservation(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onPostExecute(Long result) {
+            Log.v(TAG, "inserted: " + result);
+        }
+    }
+
 }
