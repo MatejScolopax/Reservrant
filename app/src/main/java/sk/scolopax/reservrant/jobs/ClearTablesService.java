@@ -15,7 +15,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import sk.scolopax.reservrant.R;
-import sk.scolopax.reservrant.data.DatabaseContract;
+import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 import sk.scolopax.reservrant.ui.HomeActivity;
 
 
@@ -54,7 +54,8 @@ public class ClearTablesService extends IntentService {
 
         Uri uri =DatabaseContract.TableTables.CONTENT_URI;
         ContentResolver resolver = getContentResolver();
-        return resolver.update(uri, values, null, null);
+        String where = DatabaseContract.TableTables.COL_AVAILABLE + " = 0";
+        return resolver.update(uri, values, where, null);
     }
 
     private void createNotification()
@@ -62,8 +63,7 @@ public class ClearTablesService extends IntentService {
 
         long cleared =  clearTables();
 
-
-        // if no resrvation was removed, do not notify
+        // if no reservation was removed, do not notify
         if (cleared> 0) {
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)

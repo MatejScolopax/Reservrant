@@ -16,15 +16,14 @@ import android.widget.EditText;
 import sk.scolopax.reservrant.R;
 import sk.scolopax.reservrant.data.Customer;
 import sk.scolopax.reservrant.data.CustomerAdapter;
-import sk.scolopax.reservrant.data.DatabaseContract;
+import sk.scolopax.reservrant.data.dbs.DatabaseContract;
+import sk.scolopax.reservrant.data.net.DownloadCustomersTask;
+import sk.scolopax.reservrant.data.net.DownloadTablesTask;
 import sk.scolopax.reservrant.jobs.EraseJob;
 
 public class HomeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-
-    private String mCurFilter;
     private CustomerAdapter mCustomerAdapter;
-
     private RecyclerView mCustomerRecyclerView;
     private EditText edtSearch;
     private static final int CUSTOMERS_LOADER_ID = 0;
@@ -73,6 +72,10 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
 
         EraseJob.startStopEraser(this);
         getSupportLoaderManager().initLoader(CUSTOMERS_LOADER_ID, null, this );
+
+        //TODO call these at the first start:
+       // new DownloadCustomersTask(HomeActivity.this).execute();
+       // new DownloadTablesTask(HomeActivity.this).execute();
     }
 
     /* LoaderManager.LoaderCallbacks<Cursor> */
@@ -80,7 +83,8 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
     private Loader<Cursor> getAllCustmoers()
     {
         String[] projection = DatabaseContract.TableCustomers.getProjection();
-        return new CursorLoader(HomeActivity.this, DatabaseContract.TableCustomers.CONTENT_URI, projection, null, null, null);
+        String order = DatabaseContract.TableCustomers.COL_NAME_LAST + " ASC ";
+        return new CursorLoader(HomeActivity.this, DatabaseContract.TableCustomers.CONTENT_URI, projection, null, null, order);
     }
 
     private Loader<Cursor> getLikeCustmoers(String like)
@@ -88,7 +92,8 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         String[] projection = DatabaseContract.TableCustomers.getProjection();
         String selection = DatabaseContract.TableCustomers.COL_NAME_FIRST + " LIKE ? OR " + DatabaseContract.TableCustomers.COL_NAME_LAST + " LIKE ? ";
         String[] selectionArgs = {"%" + like + "%","%" + like + "%"};
-        return new CursorLoader(HomeActivity.this, DatabaseContract.TableCustomers.CONTENT_URI, projection, selection, selectionArgs, null);
+        String order = DatabaseContract.TableCustomers.COL_NAME_LAST + " ASC ";
+        return new CursorLoader(HomeActivity.this, DatabaseContract.TableCustomers.CONTENT_URI, projection, selection, selectionArgs, order);
     }
 
     @Override

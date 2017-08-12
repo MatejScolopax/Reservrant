@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import sk.scolopax.reservrant.data.dbs.DatabaseContract;
+
 /**
  * Created by scolopax on 08/08/2017.
  */

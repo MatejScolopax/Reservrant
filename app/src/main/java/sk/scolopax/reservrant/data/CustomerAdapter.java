@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import sk.scolopax.reservrant.R;
+import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 
 /**
  * Created by scolopax on 08/08/2017.

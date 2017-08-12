@@ -1,4 +1,4 @@
-package sk.scolopax.reservrant.data;
+package sk.scolopax.reservrant.data.dbs;
 
 import android.content.ContentUris;
 import android.net.Uri;
@@ -24,9 +24,9 @@ public class DatabaseContract {
         public static final String COL_NAME_FIRST = "firstname";
         public static final String COL_NAME_LAST = "lastname";
 
-        static final int COL_IDX_ID = 0;
-        static final int COL_IDX_NAME_FIRST = 1;
-        static final int COL_IDX_NAME_LAST = 2;
+        public static final int COL_IDX_ID = 0;
+        public static final int COL_IDX_NAME_FIRST = 1;
+        public static final int COL_IDX_NAME_LAST = 2;
 
         public static final Uri CONTENT_URI = new Uri.Builder().scheme("content")
                 .authority(CONTENT_AUTHORITY_CUSTOMER)
@@ -55,10 +55,10 @@ public class DatabaseContract {
         public static final String COL_AVAILABLE = "available";
         public static final String COL_RESERVATION_TIME = "reservationtime";
 
-        static final int COL_IDX_ID = 0;
-        static final int COL_IDX_ID_CUSTOMER = 1;
-        static final int COL_IDX_RESERVATION_TIME = 2;
-        static final int COL_IDX_AVAILABLE = 3;
+        public static final int COL_IDX_ID = 0;
+        public static final int COL_IDX_ID_CUSTOMER = 1;
+        public static final int COL_IDX_RESERVATION_TIME = 2;
+        public static final int COL_IDX_AVAILABLE = 3;
 
         public static final Uri CONTENT_URI = new Uri.Builder().scheme("content")
                 .authority(CONTENT_AUTHORITY_TABLE)

@@ -1,4 +1,4 @@
-package sk.scolopax.reservrant.data;
+package sk.scolopax.reservrant.data.dbs;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 /**
  * Created by scolopax on 08/08/2017.
@@ -81,10 +82,7 @@ public class CustomersProvider extends ContentProvider {
             case CUSTOMERS:
             {
                 long id = db.insert(DatabaseContract.TABLE_CUSTOMERS, null, contentValues);
-                if ( id > 0 )
-                    returnUri = DatabaseContract.TableCustomers.buildCustomerUri(id);
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                returnUri = DatabaseContract.TableCustomers.buildCustomerUri(id);
                 break;
             }
             default:
@@ -95,8 +93,31 @@ public class CustomersProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        throw new UnsupportedOperationException("This provider does not support deletion");
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        int uriType = sUriMatcher.match(uri);
+        SQLiteDatabase db = mReservrantDBHelper.getWritableDatabase();
+        int rowsDeleted = 0;
+
+        switch (uriType) {
+            case CUSTOMERS:
+                rowsDeleted = db.delete(DatabaseContract.TABLE_CUSTOMERS, selection, selectionArgs);
+                break;
+            case CUSTOMERS_WITH_ID:
+                String id = uri.getLastPathSegment();
+                if (TextUtils.isEmpty(selection))
+                {
+                    rowsDeleted = db.delete(DatabaseContract.TABLE_CUSTOMERS, DatabaseContract.TableTables.COL_ID + "=" + id, null);
+                }
+                else
+                {
+                    rowsDeleted = db.delete( DatabaseContract.TABLE_CUSTOMERS, DatabaseContract.TableTables.COL_ID + "=" + id + " and " + selection, selectionArgs);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return rowsDeleted;
     }
 
     @Override

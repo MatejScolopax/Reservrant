@@ -16,11 +16,9 @@ import android.widget.LinearLayout;
 
 import sk.scolopax.reservrant.R;
 import sk.scolopax.reservrant.data.Customer;
-import sk.scolopax.reservrant.data.DatabaseContract;
+import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 import sk.scolopax.reservrant.data.ReserveTableTask;
 import sk.scolopax.reservrant.data.TablesAdapter;
-
-
 
 
 /**

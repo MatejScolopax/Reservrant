@@ -1,4 +1,4 @@
-package sk.scolopax.reservrant.data;
+package sk.scolopax.reservrant.data.dbs;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -103,7 +103,10 @@ public class TablesProvider extends ContentProvider {
 
         switch (uriType) {
             case TABLES:
+                //delete all
                 rowsDeleted = db.delete(DatabaseContract.TABLE_TABLES, selection, selectionArgs);
+                // reset autoincrement
+                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + DatabaseContract.TABLE_TABLES + "'");
                 break;
             case TABLES_WITH_ID:
                 String id = uri.getLastPathSegment();

@@ -1,4 +1,4 @@
-package sk.scolopax.reservrant.data;
+package sk.scolopax.reservrant.data.dbs;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import sk.scolopax.reservrant.R;
+import sk.scolopax.reservrant.data.Customer;
 
 /**
  * Created by scolopax on 08/08/2017.

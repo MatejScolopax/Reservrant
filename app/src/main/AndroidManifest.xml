@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sk.scolopax.reservrant">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -33,12 +34,12 @@
 
 
         <provider
-            android:name=".data.CustomersProvider"
+            android:name=".data.dbs.CustomersProvider"
             android:authorities="sk.scolopax.reservrant.customer"
             android:exported="true" />
 
         <provider
-            android:name=".data.TablesProvider"
+            android:name=".data.dbs.TablesProvider"
             android:authorities="sk.scolopax.reservrant.table"
             android:exported="true" />
 

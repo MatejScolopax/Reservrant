@@ -1,7 +1,8 @@
 package sk.scolopax.reservrant.data;
 
 import android.database.Cursor;
-import android.util.Log;
+
+import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 
 /**
  * Created by scolopax on 09/08/2017.

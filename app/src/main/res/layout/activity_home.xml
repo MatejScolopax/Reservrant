@@ -14,12 +14,29 @@ tools:context="sk.scolopax.reservrant.ui.HomeActivity">
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:visibility="gone"
     android:text="Name:" />
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/edt_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_hint"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
 <EditText
-    android:id="@+id/edt_search"
+
     android:layout_marginTop="10dp"
+    android:hint="@string/search_hint"
     android:layout_width="match_parent"
+    android:visibility="gone"
     android:layout_height="wrap_content" />
 
 <android.support.v7.widget.RecyclerView
