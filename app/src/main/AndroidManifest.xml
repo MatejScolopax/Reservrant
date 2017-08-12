@@ -36,12 +36,12 @@
         <provider
             android:name=".data.dbs.CustomersProvider"
             android:authorities="sk.scolopax.reservrant.customer"
-            android:exported="true" />
+            android:exported="false" />
 
         <provider
             android:name=".data.dbs.TablesProvider"
             android:authorities="sk.scolopax.reservrant.table"
-            android:exported="true" />
+            android:exported="false" />
 
     </application>
 
