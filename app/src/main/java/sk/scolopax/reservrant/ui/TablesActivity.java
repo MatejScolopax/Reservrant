@@ -12,23 +12,24 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 
 import sk.scolopax.reservrant.R;
 import sk.scolopax.reservrant.data.Customer;
 import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 import sk.scolopax.reservrant.data.ReserveTableTask;
-import sk.scolopax.reservrant.data.TablesAdapter;
+import sk.scolopax.reservrant.data.adapter.TablesAdapter;
 
 
 /**
- * Created by scolopax on 09/08/2017.
+ * Created by Matej Sluka on 09/08/2017.
  */
 
 public class TablesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private Customer selectedCustomer;
-    private TablesAdapter mTableAdapter;
+    private TablesAdapter tablesAdapter;
     private static final int TABLES_LOADER_ID = 10;
     private static final String TAG = TablesActivity.class.getSimpleName();
 
@@ -50,8 +51,8 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
         }
         GridView gridview = (GridView) findViewById(R.id.gridview);
 
-        mTableAdapter = new TablesAdapter(TablesActivity.this);
-        gridview.setAdapter(mTableAdapter);
+        tablesAdapter = new TablesAdapter(TablesActivity.this);
+        gridview.setAdapter(tablesAdapter);
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -60,10 +61,11 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
                 LinearLayout ll = (LinearLayout) view.findViewById(R.id.fl_table);
                 ll.setBackground(TablesActivity.this.getDrawable(R.drawable.table_unavailable));
 
-                Long params[] = {idTable, selectedCustomer.idCustomer };
+                Long params[] = {idTable, selectedCustomer.idCustomer};
                 new MakeReservation(TablesActivity.this).execute(params);
             }
         });
+
         getSupportLoaderManager().initLoader(TABLES_LOADER_ID, null, this );
     }
 
@@ -75,12 +77,12 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mTableAdapter.refreshCursor(data);
+        tablesAdapter.refreshCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mTableAdapter.refreshCursor(null);
+        tablesAdapter.refreshCursor(null);
     }
 
     /* Reservation task on worker thread */
@@ -94,7 +96,12 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
         @Override
         protected void onPostExecute(Long result) {
             Log.v(TAG, "inserted: " + result);
+
+            if (result == 0)
+            {
+                Toast.makeText(TablesActivity.this,getResources().getString(R.string.table_occupied), Toast.LENGTH_SHORT ).show();
+            }
+
         }
     }
-
 }

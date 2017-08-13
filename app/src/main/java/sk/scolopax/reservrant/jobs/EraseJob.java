@@ -1,7 +1,6 @@
 package sk.scolopax.reservrant.jobs;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -12,27 +11,26 @@ import android.util.Log;
 
 
 /**
- * Created by scolopax on 09/08/2017.
+ * Created by Matej Sluka on 09/08/2017.
  */
 
 public class EraseJob {
 
     private static final String TAG = EraseJob.class.getSimpleName();
-    private static final String SHARED_T = EraseJob.class.getSimpleName();
+    private static final String SHARED_ERASER = "SHARED_PREF_KEY_ERASER";
     private static final int JOB_ID = 123;
 
-    public static void startStopEraser(Activity activity)
+    public static void startEraser(Activity activity)
     {
-
         SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
-        boolean start = sharedPref.getBoolean(SHARED_T, true);
-
-        JobScheduler jobScheduler = (JobScheduler) activity.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        boolean start = sharedPref.getBoolean(SHARED_ERASER, true);
 
         if (start)
         {
+            JobScheduler jobScheduler = (JobScheduler) activity.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean(SHARED_T, false);
+            editor.putBoolean(SHARED_ERASER, false);
             editor.commit();
 
             long interval = 600000; //TEN_MINUTES
@@ -44,12 +42,12 @@ public class EraseJob {
 
             int result = jobScheduler.schedule(job);
 
-            if (result == JobScheduler.RESULT_SUCCESS)
+            if (result == JobScheduler.RESULT_SUCCESS) {
                 Log.d(TAG, "setting scheduled job for: " + interval);
-            else
+            }
+            else {
                 Log.d(TAG, "error code: " + result);
+            }
         }
     }
-
-
 }

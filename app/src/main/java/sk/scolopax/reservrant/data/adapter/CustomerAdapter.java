@@ -1,4 +1,4 @@
-package sk.scolopax.reservrant.data;
+package sk.scolopax.reservrant.data.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,10 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import sk.scolopax.reservrant.R;
+import sk.scolopax.reservrant.data.Customer;
 import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 
 /**
- * Created by scolopax on 08/08/2017.
+ * Created by Matej Sluka on 08/08/2017.
  */
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder> {
@@ -20,21 +21,19 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
 
     private static final int VIEW_TYPE_CUSTOMER = 0;
 
-    private Cursor mCursor;
-    final private Context mContext;
-    final private CustomerAdapterOnClickHandler mClickHandler;
+    private Cursor cursor;
+    final private CustomerAdapterOnClickHandler clickHandler;
 
 
-    public CustomerAdapter(Context context, CustomerAdapterOnClickHandler clickHandler) {
-        mContext = context;
-        mClickHandler = clickHandler;
+    public CustomerAdapter(CustomerAdapterOnClickHandler clickHandler) {
+        this.clickHandler = clickHandler;
     }
 
     public Customer getItem(int position)
     {
-        if ( null == mCursor ) return null;
-        mCursor.moveToPosition(position);
-        return new Customer(mCursor);
+        if ( null == cursor ) return null;
+        cursor.moveToPosition(position);
+        return new Customer(cursor);
     }
 
     public interface CustomerAdapterOnClickHandler {
@@ -61,11 +60,11 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
 
     @Override
     public void onBindViewHolder(CustomerViewHolder holder, int position) {
-        mCursor.moveToPosition(position);
+        cursor.moveToPosition(position);
 
-        String idCustomer = mCursor.getString(DatabaseContract.TableCustomers.COL_IDX_ID);
-        String firstName = mCursor.getString(DatabaseContract.TableCustomers.COL_IDX_NAME_FIRST);
-        String lastName = mCursor.getString(DatabaseContract.TableCustomers.COL_IDX_NAME_LAST);
+        String idCustomer = cursor.getString(DatabaseContract.TableCustomers.COL_IDX_ID);
+        String firstName = cursor.getString(DatabaseContract.TableCustomers.COL_IDX_NAME_FIRST);
+        String lastName = cursor.getString(DatabaseContract.TableCustomers.COL_IDX_NAME_LAST);
 
       //  holder.txtIdCustomer.setText(idCustomer);
         holder.txtNameFirst.setText(firstName + " " + lastName);
@@ -74,8 +73,8 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
 
     @Override
     public int getItemCount() {
-        if ( null == mCursor ) return 0;
-        return mCursor.getCount();
+        if ( null == cursor ) return 0;
+        return cursor.getCount();
     }
 
     public class CustomerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -86,21 +85,20 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
             super(view);
            // txtIdCustomer = (TextView) view.findViewById(R.id.txt_idcustomer);
             txtNameFirst = (TextView) view.findViewById(R.id.txt_firstname);
-           // txtNameLast = (TextView) view.findViewById(R.id.txt_lastname);
             view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
-            int idColumn = mCursor.getColumnIndex(DatabaseContract.TableCustomers.COL_ID);
-            mClickHandler.onClick(mCursor.getLong(idColumn),getItem(adapterPosition));
+            cursor.moveToPosition(adapterPosition);
+            int idColumn = cursor.getColumnIndex(DatabaseContract.TableCustomers.COL_ID);
+            clickHandler.onClick(cursor.getLong(idColumn),getItem(adapterPosition));
         }
     }
 
     public void refreshCursor(Cursor newCursor) {
-        mCursor = newCursor;
+        cursor = newCursor;
         notifyDataSetChanged();
     }
 }

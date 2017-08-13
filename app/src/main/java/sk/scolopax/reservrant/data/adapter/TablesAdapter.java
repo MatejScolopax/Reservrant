@@ -1,4 +1,4 @@
-package sk.scolopax.reservrant.data;
+package sk.scolopax.reservrant.data.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,14 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import sk.scolopax.reservrant.R;
+import sk.scolopax.reservrant.data.Table;
 
 /**
- * Created by scolopax on 09/08/2017.
+ * Created by Matej Sluka on 09/08/2017.
  */
 
 public class TablesAdapter extends BaseAdapter {
 
-    private Cursor mCursor;
+    private Cursor cursor;
     private Context context;
     private LayoutInflater layoutinflater;
 
@@ -27,21 +28,21 @@ public class TablesAdapter extends BaseAdapter {
     }
 
     public void refreshCursor(Cursor newCursor) {
-        mCursor = newCursor;
+        cursor = newCursor;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        if ( null == mCursor ) return 0;
-        return mCursor.getCount();
+        if ( null == cursor) return 0;
+        return cursor.getCount();
     }
 
     @Override
     public Object getItem(int position) {
-        if ( null == mCursor ) return null;
-        mCursor.moveToPosition(position);
-        return new Table(mCursor);
+        if ( null == cursor) return null;
+        cursor.moveToPosition(position);
+        return new Table(cursor);
     }
 
     @Override
@@ -57,20 +58,20 @@ public class TablesAdapter extends BaseAdapter {
             listViewHolder = new ViewHolder();
             convertView = layoutinflater.inflate(R.layout.grid_item_table, parent, false);
             listViewHolder.txtIdTable = (TextView)convertView.findViewById(R.id.txt_idtable);
-            listViewHolder.ll = (LinearLayout) convertView.findViewById(R.id.fl_table);
+            listViewHolder.linearLayout = (LinearLayout) convertView.findViewById(R.id.fl_table);
             convertView.setTag(listViewHolder);
         }else{
             listViewHolder = (ViewHolder)convertView.getTag();
         }
 
         listViewHolder.txtIdTable.setText(String.valueOf(getItemId(i)));
-        Table t = (Table)getItem(i);
-        listViewHolder.ll.setBackground(t.isAvailable ? context.getDrawable(R.drawable.table_available) : context.getDrawable(R.drawable.table_unavailable));
+        Table table = (Table)getItem(i);
+        listViewHolder.linearLayout.setBackground(table.isAvailable ? context.getDrawable(R.drawable.table_available) : context.getDrawable(R.drawable.table_unavailable));
         return convertView;
     }
 
     class ViewHolder {
         TextView txtIdTable;
-        LinearLayout ll;
+        LinearLayout linearLayout;
     }
 }

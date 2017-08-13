@@ -20,14 +20,14 @@ import sk.scolopax.reservrant.ui.HomeActivity;
 
 
 /**
- * Created by scolopax on 11/08/2017.
+ * Created by Matej Sluka on 11/08/2017.
  */
 
 public class ClearTablesService extends IntentService {
 
     public static final int NOTIFICATION_ID = 12;
     private static final String TAG = ClearTablesService.class.getSimpleName();
-    private NotificationManager mNotificationManager;
+    private NotificationManager notificationManager;
 
     public ClearTablesService() {
         super(TAG);
@@ -36,7 +36,7 @@ public class ClearTablesService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Log.v(TAG, "NotificationManager created");
     }
 
@@ -81,7 +81,7 @@ public class ClearTablesService extends IntentService {
             Notification notification = mBuilder.build();
             notification.flags = Notification.FLAG_AUTO_CANCEL;
 
-            mNotificationManager.notify(NOTIFICATION_ID, notification);
+            notificationManager.notify(NOTIFICATION_ID, notification);
         }
     }
 

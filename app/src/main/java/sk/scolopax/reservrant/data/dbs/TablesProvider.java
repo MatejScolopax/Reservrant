@@ -12,7 +12,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 /**
- * Created by scolopax on 09/08/2017.
+ * Created by Matej Sluka on 09/08/2017.
  */
 
 public class TablesProvider extends ContentProvider {
@@ -26,16 +26,16 @@ public class TablesProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static
     {
-        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_TABLE, DatabaseContract.TABLE_TABLES, TABLES);
+        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_TABLE, DatabaseContract.TABLE_NAME_TABLES, TABLES);
 
-        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_TABLE, DatabaseContract.TABLE_TABLES + "/#", TABLES_WITH_ID);
+        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_TABLE, DatabaseContract.TABLE_NAME_TABLES + "/#", TABLES_WITH_ID);
     }
 
-    private ReservrantDBHelper mReservrantDBHelper;
+    private ReservrantDBHelper reservrantDBHelper;
 
     @Override
     public boolean onCreate() {
-        mReservrantDBHelper = new ReservrantDBHelper(getContext());
+        reservrantDBHelper = new ReservrantDBHelper(getContext());
         return false;
     }
 
@@ -44,7 +44,7 @@ public class TablesProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor cursor;
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        queryBuilder.setTables(DatabaseContract.TABLE_TABLES);
+        queryBuilder.setTables(DatabaseContract.TABLE_NAME_TABLES);
 
         switch (sUriMatcher.match(uri))
         {
@@ -60,7 +60,7 @@ public class TablesProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        SQLiteDatabase db = mReservrantDBHelper.getWritableDatabase();
+        SQLiteDatabase db = reservrantDBHelper.getWritableDatabase();
         cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -77,11 +77,11 @@ public class TablesProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         Uri returnUri;
-        SQLiteDatabase db = mReservrantDBHelper.getWritableDatabase();
+        SQLiteDatabase db = reservrantDBHelper.getWritableDatabase();
         switch (sUriMatcher.match(uri)) {
             case TABLES:
             {
-                long id = db.insert(DatabaseContract.TABLE_TABLES, null, contentValues);
+                long id = db.insert(DatabaseContract.TABLE_NAME_TABLES, null, contentValues);
                 if ( id > 0 )
                     returnUri = DatabaseContract.TableTables.buildTablesUri(id);
                 else
@@ -98,25 +98,25 @@ public class TablesProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int uriType = sUriMatcher.match(uri);
-        SQLiteDatabase db = mReservrantDBHelper.getWritableDatabase();
+        SQLiteDatabase db = reservrantDBHelper.getWritableDatabase();
         int rowsDeleted = 0;
 
         switch (uriType) {
             case TABLES:
                 //delete all
-                rowsDeleted = db.delete(DatabaseContract.TABLE_TABLES, selection, selectionArgs);
+                rowsDeleted = db.delete(DatabaseContract.TABLE_NAME_TABLES, selection, selectionArgs);
                 // reset autoincrement
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + DatabaseContract.TABLE_TABLES + "'");
+                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + DatabaseContract.TABLE_NAME_TABLES + "'");
                 break;
             case TABLES_WITH_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection))
                 {
-                    rowsDeleted = db.delete(DatabaseContract.TABLE_TABLES, DatabaseContract.TableTables.COL_ID + "=" + id, null);
+                    rowsDeleted = db.delete(DatabaseContract.TABLE_NAME_TABLES, DatabaseContract.TableTables.COL_ID + "=" + id, null);
                 }
                 else
                 {
-                    rowsDeleted = db.delete( DatabaseContract.TABLE_TABLES, DatabaseContract.TableTables.COL_ID + "=" + id + " and " + selection, selectionArgs);
+                    rowsDeleted = db.delete( DatabaseContract.TABLE_NAME_TABLES, DatabaseContract.TableTables.COL_ID + "=" + id + " and " + selection, selectionArgs);
                 }
                 break;
             default:
@@ -129,22 +129,22 @@ public class TablesProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
         int uriType = sUriMatcher.match(uri);
-        SQLiteDatabase db = mReservrantDBHelper.getWritableDatabase();
+        SQLiteDatabase db = reservrantDBHelper.getWritableDatabase();
         int rowsUpdated = 0;
 
         switch (uriType) {
             case TABLES:
-                rowsUpdated = db.update(DatabaseContract.TABLE_TABLES,contentValues, selection, selectionArgs);
+                rowsUpdated = db.update(DatabaseContract.TABLE_NAME_TABLES,contentValues, selection, selectionArgs);
                 break;
             case TABLES_WITH_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection))
                 {
-                    rowsUpdated = db.update( DatabaseContract.TABLE_TABLES, contentValues, DatabaseContract.TableTables.COL_ID + "=" + id, null);
+                    rowsUpdated = db.update( DatabaseContract.TABLE_NAME_TABLES, contentValues, DatabaseContract.TableTables.COL_ID + "=" + id, null);
                 }
                 else
                 {
-                    rowsUpdated = db.update( DatabaseContract.TABLE_TABLES,contentValues, DatabaseContract.TableTables.COL_ID + "=" + id + " and " + selection, selectionArgs);
+                    rowsUpdated = db.update( DatabaseContract.TABLE_NAME_TABLES,contentValues, DatabaseContract.TableTables.COL_ID + "=" + id + " and " + selection, selectionArgs);
                 }
                 break;
             default:

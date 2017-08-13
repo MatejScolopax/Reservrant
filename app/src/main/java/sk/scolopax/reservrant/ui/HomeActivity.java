@@ -1,7 +1,11 @@
 package sk.scolopax.reservrant.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -11,11 +15,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 
 import sk.scolopax.reservrant.R;
 import sk.scolopax.reservrant.data.Customer;
-import sk.scolopax.reservrant.data.CustomerAdapter;
+import sk.scolopax.reservrant.data.adapter.CustomerAdapter;
 import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 import sk.scolopax.reservrant.data.net.DownloadCustomersTask;
 import sk.scolopax.reservrant.data.net.DownloadTablesTask;
@@ -23,11 +28,14 @@ import sk.scolopax.reservrant.jobs.EraseJob;
 
 public class HomeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private CustomerAdapter mCustomerAdapter;
-    private RecyclerView mCustomerRecyclerView;
+    private static final String TAG = HomeActivity.class.getSimpleName();
+    private CustomerAdapter customerAdapter;
+    private RecyclerView customerRecyclerView;
     private EditText edtSearch;
-    private static final int CUSTOMERS_LOADER_ID = 0;
+    private SharedPreferences sharedPref;
 
+    private static final int CUSTOMERS_LOADER_ID = 0;
+    private static final String SHARED_DOWNLOAD = "SHARED_PREF_KEY_DOWNLOAD";
     public static final String PARCELABLE_EXTRA = "sk.scolopax.Customer.parcelable";
 
     @Override
@@ -36,13 +44,13 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_home);
 
         edtSearch = (EditText) findViewById(R.id.edt_search);
-        mCustomerRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_customers);
+        customerRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_customers);
 
-        mCustomerRecyclerView.setHasFixedSize(true);
+        customerRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager cardLayoutManager = new LinearLayoutManager(this);
-        mCustomerRecyclerView.setLayoutManager(cardLayoutManager);
+        customerRecyclerView.setLayoutManager(cardLayoutManager);
 
-        mCustomerAdapter = new CustomerAdapter(this, new CustomerAdapter.CustomerAdapterOnClickHandler() {
+        customerAdapter = new CustomerAdapter(new CustomerAdapter.CustomerAdapterOnClickHandler() {
             @Override
             public void onClick(Long id, Customer customer) {
                 Intent answerIntent = new Intent(HomeActivity.this, TablesActivity.class);
@@ -51,7 +59,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        mCustomerRecyclerView.setAdapter(mCustomerAdapter);
+        customerRecyclerView.setAdapter(customerAdapter);
 
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -70,13 +78,49 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        EraseJob.startStopEraser(this);
+
+        // start job that removes every 10 minutes all reservations
+        EraseJob.startEraser(this);
         getSupportLoaderManager().initLoader(CUSTOMERS_LOADER_ID, null, this );
 
-        //TODO call these at the first start:
-       // new DownloadCustomersTask(HomeActivity.this).execute();
-       // new DownloadTablesTask(HomeActivity.this).execute();
+
+        /* app from the very beginning contains data, but those are replaced from downloaded data */
+
+        this.sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        boolean isDownloaded = sharedPref.getBoolean(SHARED_DOWNLOAD, false);
+
+        // when device is connected to internet and data were not downloaded
+        if (!isDownloaded && isConnected(this))
+        {
+            //download data from web
+            Log.v(TAG,"downloading data");
+            new DownloadTask(this).execute();
+        }
+        else
+        {
+            Log.v(TAG,"not downloading, downloaded"+ isDownloaded + " connected:" +isConnected(this));
+        }
+
+
     }
+
+    /**
+     * Check if device is connected
+     * @param context
+     * @return
+     */
+    public static boolean isConnected(Context context)
+    {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null != activeNetwork)
+        {
+            return (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI || activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE);
+        }
+        return false;
+    }
+
 
     /* LoaderManager.LoaderCallbacks<Cursor> */
 
@@ -110,11 +154,52 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCustomerAdapter.refreshCursor(data);
+        customerAdapter.refreshCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mCustomerAdapter.refreshCursor(null);
+        customerAdapter.refreshCursor(null);
     }
+
+    /* Data download tasks*/
+
+    private class DownloadTask extends DownloadCustomersTask
+    {
+
+        Context context;
+
+        public DownloadTask(Context context) {
+            super(context);
+            this.context = context;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result)
+            {
+                new DownloadTables(context).execute();
+            }
+        }
+    }
+
+    private class DownloadTables extends DownloadTablesTask
+    {
+
+        public DownloadTables(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result)
+            {
+                // when successful, save to shared preferences
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean(SHARED_DOWNLOAD, true);
+                editor.commit();
+            }
+        }
+    }
+
 }

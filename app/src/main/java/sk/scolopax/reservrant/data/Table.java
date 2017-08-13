@@ -5,7 +5,7 @@ import android.database.Cursor;
 import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 
 /**
- * Created by scolopax on 09/08/2017.
+ * Created by Matej Sluka on 09/08/2017.
  */
 
 public class Table{
@@ -30,5 +30,4 @@ public class Table{
         this.isAvailable =  cursor.getInt(DatabaseContract.TableTables.COL_IDX_AVAILABLE ) == 1 ? true : false;
         this.reservationTime = cursor.getInt(DatabaseContract.TableTables.COL_IDX_RESERVATION_TIME);
     }
-
 }

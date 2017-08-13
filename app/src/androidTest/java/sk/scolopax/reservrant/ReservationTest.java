@@ -36,18 +36,11 @@ import static org.hamcrest.Matchers.anything;
 @RunWith(AndroidJUnit4.class)
 public class ReservationTest {
 
-    private String mButtonString;
-
-//    @Before
-//    public void setUp() throws Exception{
-//        setContext(InstrumentationRegistry.getTargetContext());
-//    }
-
     @Rule
     public ActivityTestRule<HomeActivity> mActivityRule = new ActivityTestRule<>(HomeActivity.class);
 
     @Test
-    public void demonstrateIntentPrep() {
+    public void reservationTest() {
 
         long idTable = 1;
 
@@ -110,6 +103,10 @@ public class ReservationTest {
 
         //table should be still reserved for Columbus
         assertEquals(idCusomter,"12");
+
+        // remove reservation
+        updated = InstrumentationRegistry.getTargetContext().getContentResolver().update(uri, values, null, null);
+        assertEquals(updated,1);
     }
 
 }

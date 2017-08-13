@@ -20,10 +20,10 @@ import sk.scolopax.reservrant.data.Customer;
 import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 
 /**
- * Created by scolopax on 12/08/2017.
+ * Created by Matej Sluka on 12/08/2017.
  */
 
-public class DownloadCustomersTask extends AsyncTask<Long, String, Boolean> {
+public abstract class DownloadCustomersTask extends AsyncTask<Long, String, Boolean> {
 
     private Context context;
     private static final String TAG = DownloadCustomersTask.class.getSimpleName();
@@ -32,6 +32,8 @@ public class DownloadCustomersTask extends AsyncTask<Long, String, Boolean> {
         super();
         this.context = context;
     }
+
+    protected abstract void onPostExecute(Boolean result);
 
     @Override
     protected Boolean doInBackground(Long... longs) {
@@ -44,9 +46,10 @@ public class DownloadCustomersTask extends AsyncTask<Long, String, Boolean> {
             URL url = new URL(new StringBuilder("nosj.tsil-remotsuc/tnemssessa-oodnauq/moc.swanozama.1-tsew-ue-3s//:sptth").reverse().toString());
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setConnectTimeout(5000);
+
+
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
             StringBuilder builder = new StringBuilder();
 
             String line;
@@ -55,7 +58,6 @@ public class DownloadCustomersTask extends AsyncTask<Long, String, Boolean> {
             }
 
             JSONArray customers_array = new JSONArray(builder.toString());
-
             ContentValues[] valuesArr = new ContentValues[customers_array.length()];
 
             for (int i = 0; i < customers_array.length(); i++) {

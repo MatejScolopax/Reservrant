@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 
 /**
- * Created by scolopax on 08/08/2017.
+ * Created by Matej Sluka on 08/08/2017.
  */
 
 public class Customer implements Parcelable {

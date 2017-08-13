@@ -12,7 +12,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 /**
- * Created by scolopax on 08/08/2017.
+ * Created by Matej Sluka on 08/08/2017.
  */
 
 public class CustomersProvider extends ContentProvider {
@@ -25,16 +25,16 @@ public class CustomersProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static
     {
-        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_CUSTOMER, DatabaseContract.TABLE_CUSTOMERS, CUSTOMERS);
+        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_CUSTOMER, DatabaseContract.TABLE_NAME_CUSTOMERS, CUSTOMERS);
 
-        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_CUSTOMER, DatabaseContract.TABLE_CUSTOMERS + "/#", CUSTOMERS_WITH_ID);
+        sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY_CUSTOMER, DatabaseContract.TABLE_NAME_CUSTOMERS + "/#", CUSTOMERS_WITH_ID);
     }
 
-    private ReservrantDBHelper mReservrantDBHelper;
+    private ReservrantDBHelper reservrantDBHelper;
 
     @Override
     public boolean onCreate() {
-        mReservrantDBHelper = new ReservrantDBHelper(getContext());
+        reservrantDBHelper = new ReservrantDBHelper(getContext());
         return false;
     }
 
@@ -43,7 +43,7 @@ public class CustomersProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor cursor;
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        queryBuilder.setTables(DatabaseContract.TABLE_CUSTOMERS);
+        queryBuilder.setTables(DatabaseContract.TABLE_NAME_CUSTOMERS);
 
         switch (sUriMatcher.match(uri))
         {
@@ -59,7 +59,7 @@ public class CustomersProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        SQLiteDatabase db = mReservrantDBHelper.getWritableDatabase();
+        SQLiteDatabase db = reservrantDBHelper.getWritableDatabase();
         cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -75,13 +75,13 @@ public class CustomersProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        final SQLiteDatabase db = mReservrantDBHelper.getWritableDatabase();
+        final SQLiteDatabase db = reservrantDBHelper.getWritableDatabase();
         Uri returnUri;
 
         switch (sUriMatcher.match(uri)) {
             case CUSTOMERS:
             {
-                long id = db.insert(DatabaseContract.TABLE_CUSTOMERS, null, contentValues);
+                long id = db.insert(DatabaseContract.TABLE_NAME_CUSTOMERS, null, contentValues);
                 returnUri = DatabaseContract.TableCustomers.buildCustomerUri(id);
                 break;
             }
@@ -95,22 +95,22 @@ public class CustomersProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int uriType = sUriMatcher.match(uri);
-        SQLiteDatabase db = mReservrantDBHelper.getWritableDatabase();
+        SQLiteDatabase db = reservrantDBHelper.getWritableDatabase();
         int rowsDeleted = 0;
 
         switch (uriType) {
             case CUSTOMERS:
-                rowsDeleted = db.delete(DatabaseContract.TABLE_CUSTOMERS, selection, selectionArgs);
+                rowsDeleted = db.delete(DatabaseContract.TABLE_NAME_CUSTOMERS, selection, selectionArgs);
                 break;
             case CUSTOMERS_WITH_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection))
                 {
-                    rowsDeleted = db.delete(DatabaseContract.TABLE_CUSTOMERS, DatabaseContract.TableTables.COL_ID + "=" + id, null);
+                    rowsDeleted = db.delete(DatabaseContract.TABLE_NAME_CUSTOMERS, DatabaseContract.TableTables.COL_ID + "=" + id, null);
                 }
                 else
                 {
-                    rowsDeleted = db.delete( DatabaseContract.TABLE_CUSTOMERS, DatabaseContract.TableTables.COL_ID + "=" + id + " and " + selection, selectionArgs);
+                    rowsDeleted = db.delete( DatabaseContract.TABLE_NAME_CUSTOMERS, DatabaseContract.TableTables.COL_ID + "=" + id + " and " + selection, selectionArgs);
                 }
                 break;
             default:

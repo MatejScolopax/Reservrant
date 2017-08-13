@@ -1,35 +1,23 @@
 package sk.scolopax.reservrant;
 
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import sk.scolopax.reservrant.data.Customer;
+import sk.scolopax.reservrant.data.dbs.DatabaseContract;
 
 import static org.junit.Assert.*;
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
+@RunWith(MockitoJUnitRunner.class)
 public class ExampleUnitTest {
+
+
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
-
-
-    @Test
-    public void read() throws Exception {
-
-
-
-        Customer customer = new Customer(0,"Marilyn", "Monroe");
-
-
-
-
-        assertEquals(4, 2 + 2);
-    }
-
-
 }

@@ -5,17 +5,16 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Created by scolopax on 08/08/2017.
+ * Created by Matej Sluka on 08/08/2017.
  */
 
 public class DatabaseContract {
 
-    // Database schema information
-    public static final String TABLE_CUSTOMERS = "customers";
-    public static final String TABLE_TABLES = "tables";
+    /* Database schema information */
+    public static final String TABLE_NAME_CUSTOMERS = "customers";
+    public static final String TABLE_NAME_TABLES = "tables";
     public static final String CONTENT_AUTHORITY_CUSTOMER = "sk.scolopax.reservrant.customer";
     public static final String CONTENT_AUTHORITY_TABLE = "sk.scolopax.reservrant.table";
-
 
     /*  Customers  */
     public static final class TableCustomers implements BaseColumns
@@ -30,9 +29,8 @@ public class DatabaseContract {
 
         public static final Uri CONTENT_URI = new Uri.Builder().scheme("content")
                 .authority(CONTENT_AUTHORITY_CUSTOMER)
-                .appendPath(TABLE_CUSTOMERS)
+                .appendPath(TABLE_NAME_CUSTOMERS)
                 .build();
-
 
         public static Uri buildCustomerUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -42,9 +40,6 @@ public class DatabaseContract {
         {
             return new String[] { TableCustomers.COL_ID,TableCustomers.COL_NAME_FIRST,TableCustomers.COL_NAME_LAST };
         }
-
-        public static final String DEFAULT_SORT_CUSTOMERS = TableCustomers.COL_ID;
-
     }
 
     /* Tables */
@@ -62,7 +57,7 @@ public class DatabaseContract {
 
         public static final Uri CONTENT_URI = new Uri.Builder().scheme("content")
                 .authority(CONTENT_AUTHORITY_TABLE)
-                .appendPath(TABLE_TABLES)
+                .appendPath(TABLE_NAME_TABLES)
                 .build();
 
         public static String[] getProjection()

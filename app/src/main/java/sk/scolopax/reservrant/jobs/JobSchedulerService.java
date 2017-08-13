@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 
 /**
- * Created by scolopax on 09/08/2017.
+ * Created by Matej Sluka on 09/08/2017.
  */
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)

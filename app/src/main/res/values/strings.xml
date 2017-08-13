@@ -2,4 +2,8 @@
     <string name="app_name">Reservrant</string>
     <string name="noti_name">All reservations were removed.</string>
     <string name="search_hint">Search by name</string>
+    <string name="table_occupied">Table is taken</string>
+    <string name="table_cancel">Cancel rezervation</string>
+
+
 </resources>
