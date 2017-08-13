@@ -59,8 +59,11 @@ public abstract class DownloadTablesTask extends AsyncTask<Long, String, Boolean
             for (int i = 0; i < tables_array.length(); i++) {
 
                 boolean isAvailable =  tables_array.getBoolean(i);
-                ContentValues values = new ContentValues(1);
+                ContentValues values = new ContentValues(2);
                 values.put(DatabaseContract.TableTables.COL_AVAILABLE, isAvailable ? 1 : 0);
+                Long idCustomer = null;
+                values.put(DatabaseContract.TableTables.COL_ID_CUSTOMER,idCustomer);
+
 
                 valuesArr[i] = values;
             }

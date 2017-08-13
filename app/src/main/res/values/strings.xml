@@ -3,7 +3,10 @@
     <string name="noti_name">All reservations were removed.</string>
     <string name="search_hint">Search by name</string>
     <string name="table_occupied">Table is taken</string>
-    <string name="table_cancel">Cancel rezervation</string>
-
-
+    <string name="table_cancel">Cancel reservation</string>
+    <string name="table_reserve">Reserve this table</string>
+    <string name="table_id">Table </string>
+    <string name="table_available">This table is available.</string>
+    <string name="table_reserved">This table is reserved.</string>
+    <string name="table_reserved_for">This table is reserved for:\n</string>
 </resources>

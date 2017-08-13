@@ -3,4 +3,10 @@
     <string name="noti_name">Alle Reservierungen wurden entfernt.</string>
     <string name="search_hint">Suche mit Name</string>
     <string name="table_occupied">Tisch ist genommen</string>
+    <string name="table_cancel">Reservierung stornieren</string>
+    <string name="table_reserve">Reserviere diesen Tisch</string>
+    <string name="table_id">Tisch </string>
+    <string name="table_available">Tisch ist verfügbar.</string>
+    <string name="table_reserved">Tisch ist reserviert.</string>
+    <string name="table_reserved_for">Tisch ist reserviert für:\n</string>
 </resources>

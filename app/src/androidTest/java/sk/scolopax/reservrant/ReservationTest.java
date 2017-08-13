@@ -44,11 +44,12 @@ public class ReservationTest {
 
         long idTable = 1;
 
-        // make sure, that table with id=1 is available
+        // make table with id=1 available
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.TableTables.COL_AVAILABLE, 1);
         Uri uri = ContentUris.withAppendedId(DatabaseContract.TableTables.CONTENT_URI, idTable);
         int updated = InstrumentationRegistry.getTargetContext().getContentResolver().update(uri, values, null, null);
+        //make sure table is available
         assertEquals(updated,1);
 
         // Click customer at position 3  (it will be Christopher Columbus, "id": 12 )
@@ -59,6 +60,10 @@ public class ReservationTest {
 
         // click table at position 0
         onData(anything()).inAdapterView(withId(R.id.gridview)).atPosition(0).onChildView(withId(R.id.txt_idtable)).perform(click());
+
+        //click on reservation confirmation in dialog
+        onView(withId(R.id.btn_dialog_reserve)).perform(click());
+
 
         Cursor cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 DatabaseContract.TableTables.CONTENT_URI,
@@ -83,30 +88,36 @@ public class ReservationTest {
         onView(withContentDescription("Navigate up")).perform(click());
 
 
-        // click customer at position 5  (it will be Albert Einstein, "id": 16)
-        onView(withId(R.id.recycler_view_customers)).perform(RecyclerViewActions.actionOnItemAtPosition(5, click()));
+        /* Cancel reservation */
+
+
+        // click on Columbus again
+        onView(withId(R.id.recycler_view_customers)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         // click table at position 0
         onData(anything()).inAdapterView(withId(R.id.gridview)).atPosition(0).onChildView(withId(R.id.txt_idtable)).perform(click());
 
+        //click on cancel button in dialog
+        onView(withId(R.id.btn_dialog_cancel)).perform(click());
+
         cursor = InstrumentationRegistry.getTargetContext().getContentResolver().query(
                 DatabaseContract.TableTables.CONTENT_URI,
-                DatabaseContract.TableTables.getProjection(),  // projection
-                DatabaseContract.TableTables._ID + " = ? ",    // selection
-                new String[] {"1"},                            // selection args
-                null                                           // sort order
+                DatabaseContract.TableTables.getProjection(),
+                DatabaseContract.TableTables._ID + " = ? ",
+                new String[] {"1"},
+                null
         );
 
         assertNotNull(cursor);
         cursor.moveToFirst();
         idCusomter = cursor.getString(1);
+        available = cursor.getString(3);
 
-        //table should be still reserved for Columbus
-        assertEquals(idCusomter,"12");
+        //check if table is available
+        assertEquals(available,"1");
 
-        // remove reservation
-        updated = InstrumentationRegistry.getTargetContext().getContentResolver().update(uri, values, null, null);
-        assertEquals(updated,1);
+        //check if is reserved for Columbus
+        assertEquals(idCusomter,null);
     }
 
 }

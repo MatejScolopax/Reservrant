@@ -33,7 +33,6 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
     private static final int TABLES_LOADER_ID = 10;
     private static final String TAG = TablesActivity.class.getSimpleName();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,12 +56,7 @@ public class TablesActivity extends AppCompatActivity implements LoaderManager.L
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long idTable) {
-
-                LinearLayout ll = (LinearLayout) view.findViewById(R.id.fl_table);
-                ll.setBackground(TablesActivity.this.getDrawable(R.drawable.table_unavailable));
-
-                Long params[] = {idTable, selectedCustomer.idCustomer};
-                new MakeReservation(TablesActivity.this).execute(params);
+                new TableDetailDialog(TablesActivity.this,idTable, selectedCustomer.idCustomer);
             }
         });
 

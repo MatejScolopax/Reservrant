@@ -34,6 +34,7 @@ public class EraseJob {
             editor.commit();
 
             long interval = 600000; //TEN_MINUTES
+            interval = 1000 * 60 ;
 
             JobInfo job = new JobInfo.Builder(JOB_ID, new ComponentName(activity.getPackageName(), JobSchedulerService.class.getName()))
                     .setPersisted(true)

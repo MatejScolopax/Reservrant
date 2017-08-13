@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Reservrant</string>
-    <string name="noti_name">Vštky rezervácie boli odstránené.</string>
+    <string name="noti_name">Všetky rezervácie boli odstránené.</string>
     <string name="search_hint">Hľadať podľa mena:</string>
-    <string name="table_occupied">Tisch ist genommen</string>
+    <string name="table_occupied">Stôl je obsadený</string>
+    <string name="table_cancel">Zrušiť rezerváciu</string>
+    <string name="table_reserve">Rezervovať stôl</string>
+    <string name="table_id">Stôl </string>
+    <string name="table_available">Tento stôl je voľný.</string>
+    <string name="table_reserved">Tento stôl je rezervovaný.</string>
+    <string name="table_reserved_for">This table is reserved for:\n</string>
 </resources>
