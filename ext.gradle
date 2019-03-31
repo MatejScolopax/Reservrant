@@ -1,0 +1,12 @@
+// build
+ext.buildTools = '28.0.3'
+ext.SdkVersionMin = 21
+ext.SdkVersionTarget = 28
+ext.SdkVersionCompile = 28
+ext.applicationId = 'sk.scolopax.reservrant'
+ext.versionName = '1.0.1'
+ext.versionCode = 2
+
+//dependencies
+ext.support = '27.1.1'
+ext.constraint='1.1.0'
